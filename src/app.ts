@@ -20,7 +20,16 @@ export function runApp() {
     tipPct = document.getElementById('percentage');
     tipAmt = document.getElementById('tip-amount');
     total = document.getElementById('total');
-    inputAmt.addEventListener('focus', resetTipButtons);
+    inputAmt.addEventListener('keyup', calcOnKeypress)
+}
+
+function calcOnKeypress() {
+    tipButtons.forEach((tipButton) => {
+        if (tipButton.attributes.getNamedItem('disabled')) {
+            let perct = tipButton.dataset.perct;
+            calculateTip(perct, inputAmt.value);
+        }
+    })
 }
 
 function handleClick() {
@@ -29,7 +38,6 @@ function handleClick() {
     that.disabled = true;
     if (inputAmt.value.length > 0) {
         let perct = that.dataset.perct;
-        message.innerText = `You are tipping ${perct}%`;
         if (parseInt(inputAmt.value) >= 0) {
             inputAmt.classList.remove('negative');
             calculateTip(perct, inputAmt.value);
@@ -47,7 +55,7 @@ function calculateTip(perct: string, amt: string) {
     let amount: number = +amt;
     let tip: number = multiply(amount, perctAmt);
     let totalNum: number = add(amount, tip);
-
+    message.innerText = `You are tipping ${perct}%`;
     billAmt.innerText = `Bill Amount: $${amt}`;
     tipPct.innerText = `Tip Percentage: ${perct}%`;
     tipAmt.innerText = `Amount of tip: $${tip}`;
