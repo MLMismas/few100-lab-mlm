@@ -1,3 +1,9 @@
 h1 {
-    color:blueviolet
+    color: green
+}
+.list-group-item.total {
+    font-style: italic
+}
+.negative {
+    border: 3px solid red;
 }
