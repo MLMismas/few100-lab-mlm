@@ -7,4 +7,6 @@ export function multiply(a, b) {
     return a * b;
 }
 
-// window["add"] = add;
+export function divide(a, b) {
+    return a / b;
+}
