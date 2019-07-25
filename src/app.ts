@@ -1,68 +1,78 @@
 import { add, multiply, divide } from './utils';
 
 let tipButtons: NodeListOf<HTMLButtonElement>;
-let message: HTMLElement
+let messageOutput: HTMLElement
 let billAmtInput: HTMLInputElement
-let billAmt: HTMLElement
-let tipPct: HTMLElement
-let tipAmt: HTMLElement
+let billAmtOutput: HTMLElement
+let tipPctOutput: HTMLElement
+let tipAmtOutput: HTMLElement
 let totalOuput: HTMLUListElement
 let custInput: HTMLInputElement
 let custTipBtn: HTMLButtonElement
 let splitBillBtn: HTMLButtonElement
 let splitBillInput: HTMLInputElement
 let splitBillOutput: HTMLParagraphElement
+let resetCalcBtn: HTMLButtonElement
 let perct: string
 let totalOuputAmt: number
 
 export function runApp() {
 
     tipButtons = document.querySelectorAll('.tip') as NodeListOf<HTMLButtonElement>;
-    message = document.getElementById('tip-perct-msg');
+    messageOutput = document.getElementById('tip-perct-msg');
     billAmtInput = document.getElementById('bill-amount-input') as HTMLInputElement;
-    billAmt = document.getElementById('bill-amount');
-    tipPct = document.getElementById('percentage');
-    tipAmt = document.getElementById('tip-amount');
+    billAmtOutput = document.getElementById('bill-amount');
+    tipPctOutput = document.getElementById('percentage');
+    tipAmtOutput = document.getElementById('tip-amount');
     totalOuput = document.getElementById('total') as HTMLUListElement;
     custInput = document.getElementById('custom-tip-input') as HTMLInputElement;
     custTipBtn = document.getElementById('cust-tip-btn') as HTMLButtonElement;
     splitBillBtn = document.getElementById('bill-split-btn') as HTMLButtonElement;
     splitBillInput = document.getElementById('bill-split-number') as HTMLInputElement;
     splitBillOutput = document.getElementById('bill-split-msg') as HTMLParagraphElement;
+    resetCalcBtn = document.getElementById('reset-btn') as HTMLButtonElement;
 
-    tipButtons.forEach((tipButton) => {
-        tipButton.addEventListener('click', handleClick);
-    })
+    custInput.disabled = true;
+    tipButtons.forEach(b => b.addEventListener('click', handleClick));
     custInput.addEventListener('keyup', calcCustOnKeyup);
     custTipBtn.addEventListener('click', handleCustTipClick);
     billAmtInput.addEventListener('keyup', calcOnKeyup);
     splitBillBtn.addEventListener('click', handleBillSplitClick);
+    resetCalcBtn.addEventListener('click', handleResetClick);
 
     perct = localStorage.getItem('perct');
+    console.log("perct " + perct);
     if (perct) {
-        setPercentButton(perct);
+        setPercentButton();
     }
+}
+
+function handleResetClick() {
+
 }
 
 function handleBillSplitClick() {
     if (totalOuputAmt) {
+        splitBillBtn.disabled = true;
         let splitAmt = divide(totalOuputAmt, +splitBillInput.value);
-        splitBillOutput.innerText = `Bill split $${splitBillInput.value} ways: ${splitAmt.toFixed(2)}/ea`;
+        splitBillOutput.innerText = `Bill split by ${splitBillInput.value}: ${splitAmt.toFixed(2)}/ea`;
     }
 }
 
 function handleCustTipClick() {
     resetTipButtons();
     custInput.value = '';
-    message.innerText = "";
+    messageOutput.innerText = "";
     custTipBtn.disabled = true;
+    custInput.disabled = false;
 }
 
-function setPercentButton(p: string) {
+function setPercentButton() {
     tipButtons.forEach((tipButton) => {
-        if (tipButton.dataset.perct === p) {
-            const that = tipButton as HTMLButtonElement;
-            that.disabled = true;
+        if (tipButton.dataset.perct === perct) {
+            //const that = tipButton as HTMLButtonElement;
+            //that.disabled = true;
+            tipButton.disabled = true;
         }
     })
 }
@@ -74,18 +84,18 @@ function calcCustOnKeyup() {
 
 function calcOnKeyup() {
     tipButtons.forEach((tipButton) => {
-        if (tipButton.attributes.getNamedItem('disabled')) {
-            let perct = tipButton.dataset.perct;
+        if (tipButton.disabled) {
             calculateTip(perct, billAmtInput.value);
         }
-        else {
-            calculateTip(custInput.value, billAmtInput.value);
-        }
     })
+    if (custTipBtn.disabled) {
+        calculateTip(custInput.value, billAmtInput.value);
+    }
 }
 
 function handleClick() {
     resetTipButtons();
+    custInput.disabled = true;
     const that = this as HTMLButtonElement;
     that.disabled = true;
     if (billAmtInput.value.length > 0) {
@@ -103,33 +113,28 @@ function handleClick() {
     }
 }
 
-function calculateTip(perct: string, amt: string) {
-    let perctAmt: number = +perct * .01;
+function calculateTip(p: string, amt: string) {
+    console.log("p " + p);
+    let perctAmt: number = +p * .01;
     let amount: number = +amt;
     let tip: number = multiply(amount, perctAmt);
     totalOuputAmt = add(amount, tip);
-    message.innerText = `You are tipping ${perct}%`;
-    billAmt.innerText = `Bill Amount: $${amount.toFixed(2)}`;
-    tipPct.innerText = `Tip Percentage: ${perct}%`;
-    tipAmt.innerText = `Amount of tip: $${tip.toFixed(2)}`;
+    messageOutput.innerText = `You are tipping ${p}%`;
+    billAmtOutput.innerText = `Bill Amount: $${amount.toFixed(2)}`;
+    tipPctOutput.innerText = `Tip Percentage: ${p}%`;
+    tipAmtOutput.innerText = `Amount of tip: $${tip.toFixed(2)}`;
     totalOuput.innerText = `Total to be Paid: $${totalOuputAmt.toFixed(2)}`;
 
 }
 
-// function calculate(perct: string, amt: string) {
-//     let perctAmt: number = +perct * .01;
-//     let amount: number = +amt;
-//     let tip: number = calculateTip(amount, perctAmt);
-//     let totalOuputPaid: number = calculatetotalOuput()
-// }
-
 function resetCalculator() {
     resetTipButtons();
-    message.innerText = "";
-    billAmt.innerText = `Bill Amount:`;
-    tipPct.innerText = `Tip Percentage:`;
-    tipAmt.innerText = `Amount of tip:`;
-    totalOuput.innerText = `totalOuput to be Paid:`;
+    messageOutput.innerText = "";
+    splitBillOutput.innerHTML = "";
+    billAmtOutput.innerText = `Bill Amount:`;
+    tipPctOutput.innerText = `Tip Percentage:`;
+    tipAmtOutput.innerText = `Amount of tip:`;
+    totalOuput.innerText = `Total Amount to be Paid:`;
 }
 
 function resetTipButtons() {
