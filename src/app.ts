@@ -48,15 +48,19 @@ export function runApp() {
 }
 
 function handleResetClick() {
-
+    resetCalculator();
 }
 
 function handleBillSplitClick() {
     if (totalOuputAmt) {
         splitBillBtn.disabled = true;
-        let splitAmt = divide(totalOuputAmt, +splitBillInput.value);
-        splitBillOutput.innerText = `Bill split by ${splitBillInput.value}: ${splitAmt.toFixed(2)}/ea`;
+        splitBill();
     }
+}
+
+function splitBill() {
+    let splitAmt = divide(totalOuputAmt, +splitBillInput.value);
+    splitBillOutput.innerText = `Bill split by ${splitBillInput.value}: ${splitAmt.toFixed(2)}/ea`;
 }
 
 function handleCustTipClick() {
@@ -70,8 +74,6 @@ function handleCustTipClick() {
 function setPercentButton() {
     tipButtons.forEach((tipButton) => {
         if (tipButton.dataset.perct === perct) {
-            //const that = tipButton as HTMLButtonElement;
-            //that.disabled = true;
             tipButton.disabled = true;
         }
     })
@@ -79,6 +81,9 @@ function setPercentButton() {
 
 function calcCustOnKeyup() {
     calculateTip(custInput.value, billAmtInput.value);
+    if (splitBillBtn.disabled) {
+        splitBill();
+    }
 
 }
 
@@ -91,15 +96,17 @@ function calcOnKeyup() {
     if (custTipBtn.disabled) {
         calculateTip(custInput.value, billAmtInput.value);
     }
+    if (splitBillBtn.disabled) {
+        splitBill();
+    }
 }
 
 function handleClick() {
     resetTipButtons();
     custInput.disabled = true;
-    const that = this as HTMLButtonElement;
-    that.disabled = true;
+    this.disabled = true;
     if (billAmtInput.value.length > 0) {
-        perct = that.dataset.perct;
+        perct = this.dataset.perct;
         localStorage.setItem('perct', perct);
         if (parseInt(billAmtInput.value) >= 0) {
             billAmtInput.classList.remove('negative');
@@ -139,10 +146,13 @@ function resetCalculator() {
 
 function resetTipButtons() {
     tipButtons.forEach((tipButton) => {
-        if (tipButton.attributes.getNamedItem('disabled'))
-            tipButton.attributes.removeNamedItem('disabled');
+        if (tipButton.disabled)
+            tipButton.disabled = false;
     })
-    if (custTipBtn.attributes.getNamedItem('disabled')) {
-        custTipBtn.attributes.removeNamedItem('disabled');
+    if (custTipBtn.disabled) {
+        custTipBtn.disabled = false;
+    }
+    if (splitBillBtn.disabled) {
+        splitBillBtn.disabled = false;
     }
 }
