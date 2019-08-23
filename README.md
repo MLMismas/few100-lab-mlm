@@ -27,16 +27,16 @@ These commands should be run in the root directory of this project from a termin
 
 ### Instructions
 
-Provide a simple app that allows one to calculate an amount of a tip to apply to a bill.
-Enter the total amount of the bill.
-User selects 10%, 15%, 20% and it displays the amount that should be left as a tip, and a total to be paid (bill amount plus tip).
-Optional Iteration 1:
+1. Provide a simple app that allows one to calculate an amount of a tip to apply to a bill.
+2. Enter the total amount of the bill.
+3. User selects 10%, 15%, 20% and it displays the amount that should be left as a tip, and a total to be paid (bill amount plus tip).
+* Optional Iteration 1:
 Store the selected preferred tip amount in web storage and retrieve its value at application start.
-Optional Iteration 2:
+* Optional Iteration 2:
 Add an option to add a custom tip amount.
-Optional Iteration 3:
+* Optional Iteration 3:
 Make an option to split the bill n ways, showing the amount due for each person.
-Optional Iteration 4:
+* Optional Iteration 4:
 Unit test all the application behavior.
 
 ### Some Tips:
