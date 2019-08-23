@@ -40,8 +40,8 @@ Optional Iteration 4:
 Unit test all the application behavior.
 
 ### Some Tips:
-•	The button which indicates the selected tip amount should be disabled. The others should not.
-•	The input should be limited to numbers. If a number less than zero is indicated, make the border of the amount input red and clear out the calculated values in the list.
-•	Make sure you are formatting the output correctly.
-•	The calculated amounts in the list should update automatically as the user enters a value. No waiting for “enter”, no “do it” button.
-•	You can use the elements id property to identify meaningful elements. Please, no hooking to events in the HTML source.
+* The button which indicates the selected tip amount should be disabled. The others should not.
+*	The input should be limited to numbers. If a number less than zero is indicated, make the border of the amount input red and clear out the calculated values in the list.
+*	Make sure you are formatting the output correctly.
+*	The calculated amounts in the list should update automatically as the user enters a value. No waiting for “enter”, no “do it” button.
+*	You can use the elements id property to identify meaningful elements. Please, no hooking to events in the HTML source.
